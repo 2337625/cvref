@@ -1,0 +1,5 @@
+fabric
+Django>=1.4,<1.6
+south>=0.7
+django-debug-toolbar
+gunicorn

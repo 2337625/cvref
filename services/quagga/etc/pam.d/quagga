@@ -1,0 +1,10 @@
+# Any user may call vtysh but only those belonging to the group quaggavty can
+# actually connect to the socket and use the program.
+#auth	sufficient	pam_permit.so
+#auth	sufficient	pam_rootok.so debug
+auth [success=1 default=ignore] pam_ssh_agent_auth.so file=/etc/ssh/quagga_authorized_keys
+auth	sufficient	pam_permit.so
+#@include common-auth
+#@include common-accountsession 
+#required pam_permit.sosession 
+#required pam_limits.so

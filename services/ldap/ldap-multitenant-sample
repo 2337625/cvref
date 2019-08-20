@@ -1,0 +1,229 @@
+###############################
+#      DEFAULT LDAP LFID      #
+###############################
+##
+# This is PoC for multi domain LDAP server, means you can have multiple
+# domains under one domain. This won't work on ADFS obviously.
+#
+# I've done mostly a research how to implement LDAP as a multi-tenant server.
+# It works, just the service configuration is bit more tricky and without
+# automation it doesn't worth it. Layout is ~ from year 2008
+#
+# o=system
+#   ou=users
+#       uid=anonymous
+#       uid=hel
+#   ou=groups oc - groupofuniquenames
+#       cn=administrators
+#           member: cn=hel, ou=users, o=system
+#       cn=ceo
+#           member: cn=hel, ou=users, o=system
+#           member: cn=other, ou=users, o=system
+#       cn=marketing
+#       cn=k2
+#       cn=education
+#   ou=roles oc - organizationalRoles
+#       cn=admin
+#           roleOccupant: cn=hel, o=accounts
+#       cn=leader
+#           roleOccupant: cn=hel, o=accounts
+#       cn=manager
+#       cn=member
+#       cn=user
+#       cn=client
+#
+# Sluzby
+# o=services
+#   ou=ftp
+#       cn=noexeption, o=services, dc=ldap, dc=noexeption, dc=eu - oc groupofuniquenames
+#           uniqueMember: uid=noexeption, ou=deamons,o=accounts
+#       cn=komerce, o=services, dc=ldap, dc=noexeption, dc=eu
+#       cn=lis, o=services, dc=ldap, dc=noexeption, dc=eu
+#   ou=mail oc - role
+#       
+#   ou=sudo
+#       uid=hel
+#   ou=jabber
+#   ou=imap
+#   ou=smtp
+#   ou=mysql
+#   ou=pgsql
+#   ou=apache
+#
+# Machines and their daemons
+# o=hosts
+#   ou=servers 
+#       ou=webor
+#           cn=ftp - oc groupofuniquenames
+#               uniqueMember: cn=noexeption, ou=ftp, o=services, dc=ldap, dc=noexeption, dc=eu
+#               uniqueMember: cn=sudo, o=services, dc=ldap, dc=noexeption, dc=eu
+# ########
+# dilema
+#           ou=ftp
+#               alias cn=noexeption, ou=ftp, o=services, dc=ldap, dc=noexeption, dc=eu
+#           ou=mysql
+#               alias cn=noexeption, ou=mysql, o=services, dc=ldap, dc=noexeption, dc=eu
+#       ou=debor
+#           uniqueMember: cn=sudo, o=services, dc=ldap, dc=noexeption, dc=eu
+#           uniqueMember: cn=mysql, o=services, dc=ldap, dc=noexeption, dc=eu
+#           uniqueMember: cn=pgsql, o=services, dc=ldap, dc=noexeption, dc=eu
+#       ou=visor
+#           uniqueMember: cn=postfix, o=services, dc=ldap, dc=noexeption, dc=eu
+#           uniqueMember: cn=jabber, o=services, dc=ldap, dc=noexeption, dc=eu
+#   ou=computers
+# Demoni a jejich uzivatelske ucty - tohle bude v accounts
+#   ou=deamons
+#       uid=noexeption
+#       uid=komerce
+#       uid=lis
+#       uid=klient
+#   ou=other
+#
+# o=webdomains
+#   o=noexeption.eu
+#       ou=accounts
+#           ou=users
+#               uid=ano
+#               uid=hel
+#               uid=rba
+#               uid=neo
+#               uid=wil
+#               uid=lis
+#           ou=groups
+#               objectClasses groupofuniquenames
+#               cn=it
+#                   uniquemember: uid=hel, o=accounts
+#               cn=k2
+#               cn=leaders
+#                   uniquemember: uid=neo, o=accounts
+#                   uniquemember: uid=rba, o=accounts
+#                   uniquemember: uid=hel, o=accounts
+#               cn=members
+#                   uniquemember: uid=lis, o=accounts
+#                   uniquemember: uid=wil, o=accounts
+#               cn=users
+#               cn=clients
+#               cn=education
+#               cn=marketing
+#           ou=roles oc - organizationalRoles
+#               cn=administrator
+#                   roleOccupant: cn=hel, o=accounts
+#               cn=leader
+#                   roleOccupant: cn=hel, o=accounts
+#               cn=manager
+#               cn=member
+#               cn=user
+#               cn=client
+#       ou=services
+#           cn=ftp,o=noexeption.eu,o=hosting,dc=ldap,dc=noexeption,dc=eu #  groupofuniquenames
+#               uniquemember: uid=hel,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#               uniquemember: uid=rba,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#               uniquemember: uid=neo,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#           cn=mail,o=noexeption.eu,o=hosting,dc=ldap,dc=noexeption,dc=eu
+#               uniquemember: uid=hel,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#           cn=http,o=noexeption.eu,o=hosting,dc=ldap,dc=noexeption,dc=eu
+#               uniquemember: uid=hel,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#       cn=phpmyadmin
+#   o=webuntu.net
+#       ou=accounts
+#       ou=services
+#           ou=ftp oc - groupofuniquenames
+#               uniquemember: cn=hel,ou=users,o=accounts,dc=ldap,dc=noexeption,dc=eu
+#   o=webuntu.info
+#       
+#   o=webuntu.cz
+#
+
+
+# LDAP DOMAIN
+dn: dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+description: ldap.noexeption.eu
+
+# Manager
+dn: cn=ldapmanager, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organizationalRole
+cn: ldapmanager
+
+# LDAP ROOT
+#dn:o=noexeption.eu, dc=ldap, dc=noexeption, dc=eu
+#objectClass: top
+#objectClass: organization
+#o: noexeption.eu
+#description: noexeption o.s.
+
+###############
+# LDAP Accounts
+#   ou=users
+#   ou=groups
+#   ou=deamons
+#   ou=roles
+
+dn: o=accounts, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organization
+o: accounts
+description: LDAP Accounts
+
+# Users - jakykoli uzivatelsky ucet
+dn: ou=users, o=accounts, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organizationalUnit
+ou: users
+description: LDAP User accounts
+
+# Groups - uzivatelske skupiny
+dn: ou=groups, o=accounts, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+description: LDAP Groups
+
+# Roles
+dn: ou=roles, o=accounts, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organizationalUnit
+ou: roles
+description: LDAP Roles - main bussiness roles
+
+# Deamons
+dn: ou=deamons, o=accounts, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organizationalUnit
+ou: deamons
+description: LDAP System deamons
+
+
+#################
+# LDAP Hosting
+#   ou=domain.cz
+#   ou=another.cz
+
+dn: o=hosting, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organization
+o: hosting
+description: LDAP Accounts
+#uniqueMember: cn=admin, ou=roles, o=accounts, dc=ldap, dc=noexeption, dc=eu
+
+dn: o=noexeption.eu, o=hosting, dc=ldap, dc=noexeption, dc=eu
+objectClass: top
+objectClass: organization
+o: noexeption.eu
+description: LDAP Accounts
+
+# LDAP Services
+#   ou=ftp
+#   ou=ssh
+#   ou=sudoers
+#   
+
+
+# LDAP Hosts o=hosts
+#   ou=Servers
+#   ou=Computers
+#   ou=atd.
+
+
+

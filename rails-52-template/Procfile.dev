@@ -1,0 +1,5 @@
+#web: bundle exec rails s -b 'ssl://127.0.0.1:5000?key=/home/user/projects/templates/rails52template/localhost.key&cert=/home/user/projects/templates/rails52template/localhost.crt'
+web: bundle exec rails s
+# watcher: ./bin/webpack --watch --colors --progress
+webpacker: ./bin/webpack-dev-server
+# express: node ./config/webpack/server.js

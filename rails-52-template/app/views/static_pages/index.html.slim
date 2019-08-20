@@ -1,0 +1,25 @@
+h1 Listing static_pages
+
+table
+  thead
+    tr
+      th Title
+      th Content
+      th
+      th
+      th
+
+  tbody
+    - if not @static_pages.nil?
+      - @static_pages.each do |static_page|
+        tr
+          td = static_page.title
+          td = static_page.content
+          td = link_to 'Show', static_page
+          - if user_signed_in?
+            td = link_to 'Edit', edit_static_page_path(static_page.id)
+            td = link_to 'Destroy', static_page_path(static_page.slug), data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Static page', new_static_page_path

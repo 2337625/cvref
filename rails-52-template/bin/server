@@ -1,0 +1,3 @@
+#!/bin/bash -i
+RAILS_ENV=development bundle install
+RAILS_ENV=development bundle exec foreman start -f Procfile.dev

@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
+    meta name="viewport" content="width=device-width, initial-scale=1" /
+    = display_meta_tags site: 'Test site'
+    = stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+  body
+    .wrapper
+      == render 'components/menu_top'
+
+      = yield
+
+      footer
+        div id="copyright"
+          p
+            This is copyright content but license is copyleft

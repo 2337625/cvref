@@ -1,0 +1,27 @@
+header id="web-header" class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed"
+  ul class="pure-menu-list pure-u-3-5 float-right myred"
+    li class="pure-menu-item pure-menu-selected"
+      a href="#" class="pure-menu-link" =t('language')
+    li class="pure-menu-item"
+      a href="#" class="pure-menu-link" =t('settings')
+    li class="pure-menu-item"
+      a href="#" class="pure-menu-link" =t('search')
+
+  a class="pure-menu-heading pure-u-1-5 mygreen" href="" =t('site_title')
+
+  ul class="pure-menu-list pure-u-1-5 myblue"
+    li class="pure-menu-item pure-menu-selected"
+      a href="#" class="pure-menu-link" =t('home')
+    li class="pure-menu-item"
+      - link_to 'Tour', static_pages_path
+
+  ul class="pure-menu-list pure-u-1-5 myblue"
+    li class="pure-menu-item"
+      - link_to 'Login', new_user_session_path
+    - if user_signed_in?
+      li class="pure-menu-item"
+        - link_to 'Destroy', destroy_user_session_path, data: { confirm: 'Are you sure?' }, method: :delete, class: 'pure-menu-link'
+        - delete_button_to 'DELDestroy', destroy_user_session_path
+    - else
+      li class="pure-menu-item"
+        a href="#" class="pure-menu-link" =t('sign_up')

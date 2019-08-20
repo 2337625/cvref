@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Poor man's KVM clone function
+
+POOL_NAME=$1
+TEMPLATE_NAME=$2
+NEW_NAME=$3
+
+virsh vol-clone $TEMPLATE_NAME $NEW_NAME --pool $POOL_NAME
+virsh start $TEMPLATE_NAME
+virsh dumpxml $TEMPLATE_NAME > /tmp/$NEW_NAME.xml
+sed -i "s/$TEMPLATE_NAME/$NEW_NAME/g" /tmp/$NEW_NAME.xml
+
+# Regenerate uuid
+# hardware addresses need to be removed, libvirt will assign
+# new addresses automatically
+sed -i '/uuid/d' /tmp/$NEW_NAME.xml
+sed -i '/mac address/d' /tmp/$NEW_NAME.xml
+
+# Create virt from xml file
+virsh define /tmp/$NEW_NAME.xml
+virsh start $NEW_NAME
+
+wait 20
+newip=$(virsh domifaddr $NEW_NAME | grep -oE '(\w+)\.(\w+)\.(\w+).(\w+)')
+newmac=$(virsh net-dhcp-leases default | grep -i "$newip" | awk '{print $3}')
+echo $newip $newmac
+#virsh create /tmp/$NEW_NAME.xml

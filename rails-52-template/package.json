@@ -1,0 +1,27 @@
+{
+  "name": "rails52template",
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^6.1.1",
+    "@angular/compiler": "^6.1.1",
+    "@angular/core": "^6.1.1",
+    "@angular/platform-browser": "^6.1.1",
+    "@angular/platform-browser-dynamic": "^6.1.1",
+    "@rails/webpacker": "4.0.0-pre.2",
+    "core-js": "^2.5.7",
+    "css-loader": "^1.0.0",
+    "purecss": "^1.0.0",
+    "purecss-components": "^0.0.12",
+    "rxjs": "^6.2.2",
+    "ts-loader": "^4.4.2",
+    "typescript": "^3.0.1",
+    "webpack": "^4.0.0",
+    "webpack-merge": "^4.1.4",
+    "yarn": "^1.9.4",
+    "zone.js": "^0.8.26"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  }
+}
