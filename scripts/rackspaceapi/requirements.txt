@@ -3,4 +3,4 @@ rackspaceauth==0.2.0
 rackspacesdk==0.7.5
 openstacksdk==0.17.0
 paramiko==2.4.1
-requests==2.22.0
+requests==2.31.0
